@@ -72,8 +72,8 @@ We will then make a time series plot with this new dataframe. Since the `interva
 activityAvg <- ddply(activity, .(interval), summarize, stepsAvg = mean(steps, 
     na.rm = T))
 ggplot(activityAvg, aes(x = interval, y = stepsAvg, group = 1)) + geom_line(color = "dodgerblue4") + 
-    scale_x_discrete(breaks = as.character(seq(0, 2300, 100))) + xlab("Time interval") + 
-    ylab("Average number of steps") + ggtitle("Average daily activity pattern") + 
+    scale_x_discrete(breaks = as.character(seq(0, 2300, 100))) + xlab("5-minute time intervals") + 
+    ylab("Average number of steps") + ggtitle("Time series plot of the average number of steps taken (averaged across all days) versus the 5-minute intervals") + 
     theme_bw()
 ```
 
@@ -110,7 +110,7 @@ nrow(activity[is.na(activity$steps), ])
 
 There is 2304 rows with `NA` in them that we need to fill.
 
-### Using interval average to impute missing values
+### Strategy for imputing missing data
 Since we already have the mean number of steps for each interval calculated and stored in the `activityAvg` dataframe, we will use this data to fill the missing values.
 
 We will extract the `NA` values together with their dates and intervals into a separate dataframe `stepsNA`. Then we will run a loop replacing the `NA` values with the average value for the corresponding 5-minute interval from `activityAvg`.
