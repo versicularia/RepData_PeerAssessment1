@@ -190,16 +190,16 @@ hljs.initHighlightingOnLoad();
 library(ggplot2)
 </code></pre>
 
-<h2>Loading and preprocessing the data</h2>
+<h2>1. Loading and preprocessing the data</h2>
 
 <p>First we unzip the archive and load the data, and then perform some prepocessing:</p>
 
 <ul>
 <li>The <code>date</code> variable is transformed into <code>Date</code> format.</li>
-<li>The <code>interval</code> variable is ransformed into a <code>factor</code>. </li>
+<li>The <code>interval</code> variable is transformed into a <code>factor</code>. </li>
 </ul>
 
-<p>The reason for turning <code>interval</code> to <code>factor</code> format is that the 5-minute intervals are coded as hour number plus the 5 minutes. In this way the interval starting, for example, at midnight, is coded as 0, the one starting at 00:05 is coded as 5, and so on with 5-minute increments. However the interval starting at 00:55 will be 55, but the next one, starting at 01:00 is coded as 100. Thus, if the intervals are treated as integers, at the beginning of each new hour there is a sort of a gap, an increment of 45 instead of 5. </p>
+<p>The reason for turning <code>interval</code> to <code>factor</code> format is that the 5-minute intervals are coded as hour number plus the 5 minutes. In this way the interval starting, for example, at midnight, is coded as 0, the one starting at 00:05 is coded as 5, and so on with 5-minute increments. However the interval starting at 00:55 will be 55, but the next one, starting at 01:00 is coded as 100. Thus, if the intervals are treated as integers, at the beginning of each new hour there is a sort of a jump, an increment of 45 instead of 5. </p>
 
 <p>Later in the analysis we will be inspecting daily activity patterns on plots and I would like to have continuous plots without these odd jumps at the start of each hour. Therefor <strong>I am going to treat the interval codes as factors for the purpose of this research.</strong></p>
 
@@ -209,7 +209,7 @@ activity$date &lt;- as.Date(activity$date)
 activity$interval &lt;- as.factor(activity$interval)
 </code></pre>
 
-<h2>What is mean total number of steps taken per day?</h2>
+<h2>2. What is mean total number of steps taken per day?</h2>
 
 <p>We will first use the <code>ddply</code> function from the <code>plyr</code> package to create a summary dataframe <code>activityTotal</code> which will contain the sum of steps for each day. We will ignore the <code>NA</code> values for this part of the analysis (i.e. consider them to equal zero).</p>
 
@@ -241,7 +241,7 @@ ggplot(activityTotal, aes(x = stepsSum)) + geom_histogram(fill = &quot;dodgerblu
 
 <p>The <strong>mean</strong> is noticeable lower than the <strong>median</strong> which suggests right-skewedness of the data, and this is what we observe on the plot. A significant amount of days appear to have 0 or close to 0 total number of steps. Alternatively these could have been the days with a lot or all observations missing, but we&#39;ll deal with this a bit later.</p>
 
-<h2>What is the average daily activity pattern?</h2>
+<h2>3. What is the average daily activity pattern?</h2>
 
 <p>We will make another summary dataframe, <code>activityAvg</code> which will contain the mean number of steps for each interval across all days.</p>
 
@@ -270,7 +270,7 @@ ggplot(activityAvg, aes(x = interval, y = stepsAvg, group = 1)) + geom_line(colo
 
 <p>It appears that the 5-minute interval that, on average, contains the maximum number of steps is <strong><code>835</code></strong>. A morning jog perhaps?</p>
 
-<h2>Imputing missing values</h2>
+<h2>4. Imputing missing values</h2>
 
 <p>First we will calculate the number of rows containing <code>NA</code> values.</p>
 
@@ -334,7 +334,7 @@ ggplot(actvImpTotal, aes(x = stepsSum)) + geom_histogram(fill = &quot;seagreen&q
 
 <p>We can observe that after filling in missing values the total number of steps per day had increased on average. Furthermore, the mean and the median are now equal.</p>
 
-<h2>Are there differences in activity patterns between weekdays and weekends?</h2>
+<h2>5. Are there differences in activity patterns between weekdays and weekends?</h2>
 
 <p>We will add a new 2-level factor variable <code>weekday</code> to the <code>activityImpute</code> dataframe which will indicate whether the day is a weekend or a weekday.</p>
 

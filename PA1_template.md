@@ -8,12 +8,12 @@ library(ggplot2)
 ```
 
 
-## Loading and preprocessing the data
+## 1. Loading and preprocessing the data
 First we unzip the archive and load the data, and then perform some prepocessing:
 * The `date` variable is transformed into `Date` format.
-* The `interval` variable is ransformed into a `factor`. 
+* The `interval` variable is transformed into a `factor`. 
 
-The reason for turning `interval` to `factor` format is that the 5-minute intervals are coded as hour number plus the 5 minutes. In this way the interval starting, for example, at midnight, is coded as 0, the one starting at 00:05 is coded as 5, and so on with 5-minute increments. However the interval starting at 00:55 will be 55, but the next one, starting at 01:00 is coded as 100. Thus, if the intervals are treated as integers, at the beginning of each new hour there is a sort of a gap, an increment of 45 instead of 5. 
+The reason for turning `interval` to `factor` format is that the 5-minute intervals are coded as hour number plus the 5 minutes. In this way the interval starting, for example, at midnight, is coded as 0, the one starting at 00:05 is coded as 5, and so on with 5-minute increments. However the interval starting at 00:55 will be 55, but the next one, starting at 01:00 is coded as 100. Thus, if the intervals are treated as integers, at the beginning of each new hour there is a sort of a jump, an increment of 45 instead of 5. 
 
 Later in the analysis we will be inspecting daily activity patterns on plots and I would like to have continuous plots without these odd jumps at the start of each hour. Therefor **I am going to treat the interval codes as factors for the purpose of this research.**
 
@@ -26,7 +26,7 @@ activity$interval <- as.factor(activity$interval)
 ```
 
 
-## What is mean total number of steps taken per day?
+## 2. What is mean total number of steps taken per day?
 We will first use the `ddply` function from the `plyr` package to create a summary dataframe `activityTotal` which will contain the sum of steps for each day. We will ignore the `NA` values for this part of the analysis (i.e. consider them to equal zero).
 
 Afterward we will plot a histogram of this summary dataframe with the `ggplot` function.
@@ -62,7 +62,8 @@ median(activityTotal$stepsSum)
 ```
 
 The **mean** is noticeable lower than the **median** which suggests right-skewedness of the data, and this is what we observe on the plot. A significant amount of days appear to have 0 or close to 0 total number of steps. Alternatively these could have been the days with a lot or all observations missing, but we'll deal with this a bit later.
-## What is the average daily activity pattern?
+
+## 3. What is the average daily activity pattern?
 We will make another summary dataframe, `activityAvg` which will contain the mean number of steps for each interval across all days.
 
 We will then make a time series plot with this new dataframe. Since the `interval` variable had been converted to `factor`, by default `ggplot` will show all the 288 of its levels on the x-axis. Having 288 ticks is neither pretty nor convenient, so we will adjust the appearence of the x-axis manually and only display the ticks at the beginning of each hour, reducing their number to 24.
@@ -95,7 +96,7 @@ activityAvg$interval[activityAvg$stepsAvg == max(activityAvg$stepsAvg)]
 It appears that the 5-minute interval that, on average, contains the maximum number of steps is **`835`**. A morning jog perhaps?
 
 
-## Imputing missing values
+## 4. Imputing missing values
 
 First we will calculate the number of rows containing `NA` values.
 
@@ -166,7 +167,7 @@ median(actvImpTotal$stepsSum)
 
 We can observe that after filling in missing values the total number of steps per day had increased on average. Furthermore, the mean and the median are now equal.
 
-## Are there differences in activity patterns between weekdays and weekends?
+## 5. Are there differences in activity patterns between weekdays and weekends?
 We will add a new 2-level factor variable `weekday` to the `activityImpute` dataframe which will indicate whether the day is a weekend or a weekday.
 
 ```r
